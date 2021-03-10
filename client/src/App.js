@@ -52,6 +52,7 @@ function search(rows){
   return rows.filter((row)=> 
   searchColumns.some((column) => row[column].toString().toLowerCase().indexOf(q.toLowerCase())>-1));
 }
+
 const columns = data[0] && Object.keys(data[0])
 
   return (
