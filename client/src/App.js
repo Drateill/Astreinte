@@ -12,13 +12,15 @@ const[duree, setDuree] = useState('')
 const[action, setAction] = useState('')
 const[data, setData] = useState([])
 const[q, setQ] = useState('')
+const[searchColumns, setsearchColumns] = useState(['Descritpif_du_ticket', 'Numero_de_ticket'])
+
 
 const [descriptionList, setdescriptionList] = useState([])
 const [newReview, setNewReview] = useState('')
 
 
 useEffect(()=>{
-  Axios.get('http://localhost:3001/api/get').then((response)=>{
+  Axios.get('http://192.168.0.186:3001/api/get').then((response)=>{
 setdescriptionList(response.data)
 setData(response.data)
   })
@@ -47,12 +49,28 @@ const updateReview = (movie) =>{
 }
 
 function search(rows){
-  return rows.filter(row=> row.Descritpif_du_ticket.indexOf(q) > -1 ||row.Action.indexOf(q) > -1||row.Numero_de_ticket.indexOf(q) > -1);
+  return rows.filter((row)=> 
+  searchColumns.some((column) => row[column].toString().toLowerCase().indexOf(q.toLowerCase())>-1));
 }
+const columns = data[0] && Object.keys(data[0])
+
   return (
     <div className="App">
       <label>Search</label>
-      <input type="text" value={q} onChange={(e)=>setQ(e.target.value)}></input>
+      <input type="text" value={q} onChange={(e)=>setQ(e.target.value)}/>
+      {
+        columns && columns.map((column) => <label>
+          <input type="checkbox" checked={searchColumns.includes(column)} onChange={(e)=>{
+            const checked = searchColumns.includes(column)
+            setsearchColumns(prev => checked
+              ? prev.filter(sc=> sc !== column)
+              : [...prev, column])
+          }
+          
+          }/>
+          {column}
+        </label>)
+      }
       <Datatable data={search(data)} />
       {/* <h1>CRUD APPLI</h1>
       <div className="form">
