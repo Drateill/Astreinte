@@ -1,6 +1,7 @@
 import './App.css';
 import React, {useState, useEffect} from "react";
 import Axios from 'axios'
+import Datatable from './datatable/datatable';
 
 function App() {
 
@@ -9,6 +10,8 @@ const[description, setdescription] = useState('')
 const[date, setDate] = useState('')
 const[duree, setDuree] = useState('')
 const[action, setAction] = useState('')
+const[data, setData] = useState([])
+const[q, setQ] = useState('')
 
 const [descriptionList, setdescriptionList] = useState([])
 const [newReview, setNewReview] = useState('')
@@ -17,6 +20,7 @@ const [newReview, setNewReview] = useState('')
 useEffect(()=>{
   Axios.get('http://localhost:3001/api/get').then((response)=>{
 setdescriptionList(response.data)
+setData(response.data)
   })
 }, [])
 
@@ -42,9 +46,15 @@ const updateReview = (movie) =>{
   setNewReview('')
 }
 
+function search(rows){
+  return rows.filter(row=> row.Descritpif_du_ticket.indexOf(q) > -1 ||row.Action.indexOf(q) > -1||row.Numero_de_ticket.indexOf(q) > -1);
+}
   return (
     <div className="App">
-      <h1>CRUD APPLI</h1>
+      <label>Search</label>
+      <input type="text" value={q} onChange={(e)=>setQ(e.target.value)}></input>
+      <Datatable data={search(data)} />
+      {/* <h1>CRUD APPLI</h1>
       <div className="form">
       <label>Ticket</label>
       <input type='text' name="ticket" onChange={(e)=>{
@@ -78,7 +88,7 @@ const updateReview = (movie) =>{
         )
         
       })}
-      </div>
+      </div> */}
     </div>
   );
 }
