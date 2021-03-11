@@ -5,11 +5,11 @@ export default function Datatable({ data }) {
     const columns = data[0] && Object.keys(data[0]);
 
     return (
-
-        <table cellPadding={0} cellSpacing={0}>
+    <div class="table-wrapper">
+        <table class ="fl-table">
             <thead>
                 <tr>
-                    {data[0] && columns.map((heading) => <th>{heading}</th>)}
+                    {data[0] && columns.map((heading) => <th>{heading.replace(/_/gi, " ")}</th>)}
                 </tr>
             </thead>
             <tbody>
@@ -20,5 +20,6 @@ export default function Datatable({ data }) {
                 </tr>)}
             </tbody>
         </table>
+    </div>
     )
 }
