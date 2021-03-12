@@ -15,13 +15,11 @@ const[q, setQ] = useState('')
 const[searchColumns, setsearchColumns] = useState(['Descritpif_du_ticket', 'Numero_de_ticket'])
 
 
-const [descriptionList, setdescriptionList] = useState([])
 const [newReview, setNewReview] = useState('')
 
 
 useEffect(()=>{
   Axios.get('http://192.168.0.186:3001/api/get').then((response)=>{
-setdescriptionList(response.data)
 setData(response.data)
   })
 }, [])
@@ -34,7 +32,6 @@ const submitReview= () => {
    duree:duree,
    action:action
   });
-  setdescriptionList([...descriptionList, {ticket:ticket, description:description}]);
 }
  
 const deleteReview = (movie) =>{
@@ -53,12 +50,22 @@ function search(rows){
   searchColumns.some((column) => row[column].toString().toLowerCase().indexOf(q.toLowerCase())>-1));
 }
 
+function hideTable(){
+  const isDisplayed = document.getElementById("fl-table").style.display
+  if (isDisplayed=="none"){
+  document.getElementById("fl-table").style.display = "inherit"
+}else{
+  document.getElementById("fl-table").style.display = "none"
+}
+}
+
 const columns = data[0] && Object.keys(data[0])
 
   return (
     <div className="App">
-      <label>Search</label>
+      <label>Search : </label>
       <input type="text" value={q} onChange={(e)=>setQ(e.target.value)}/>
+      <button onClick={hideTable}>Hide/Display</button>
       {
         columns && columns.map((column) => <label>
           <input type="checkbox" checked={searchColumns.includes(column)} onChange={(e)=>{
@@ -72,9 +79,9 @@ const columns = data[0] && Object.keys(data[0])
           {column}
         </label>)
       }
-      <Datatable data={search(data)} />
-      {/* <h1>CRUD APPLI</h1>
-      <div className="form">
+      <div>Nombre de lignes trouvées : {search(data).length}</div>
+      <Datatable data={search(data)}/>
+      <div className="form" id='formulaire'>
       <label>Ticket</label>
       <input type='text' name="ticket" onChange={(e)=>{
         setticket(e.target.value)
@@ -97,17 +104,7 @@ const columns = data[0] && Object.keys(data[0])
         setAction(e.target.value)
       }}/>
       <button onClick={submitReview}>Submit</button>
-      {descriptionList.map((val)=>{
-        return (
-        <div className="card">
-          <h1>{val.Numero_de_ticket}</h1>
-          <p>{val.Descritpif_du_ticket}</p>
-
-          </div>
-        )
-        
-      })}
-      </div> */}
+      </div> 
     </div>
   );
 }
