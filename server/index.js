@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 
 
 app.get("/api/get", (req,res)=>{
-    const sqlSelect="SELECT * FROM merged"
+    const sqlSelect="SELECT * FROM Ticket"
     db.query(sqlSelect, (err, result)=>{
         console.log(result)
         res.send(result)
@@ -35,7 +35,7 @@ app.post("/api/insert", (req, res)=> {
     const action = req.body.action
     const date = req.body.date
 
-    const sqlInsert="INSERT INTO merged (Date_appel, Duree_en_heure, Numero_de_ticket, Descritpif_du_ticket, Action) VALUES (?,?,?,?,?)"
+    const sqlInsert="INSERT INTO Ticket (Date_appel, Duree_en_heure, Numero_de_ticket, Descritpif_du_ticket, Action) VALUES (?,?,?,?,?)"
     db.query(sqlInsert, [date, duree ,ticket, description, action], (err, result)=>{
         console.log(err)
 
@@ -44,9 +44,10 @@ app.post("/api/insert", (req, res)=> {
 
 app.delete("/api/delete/:ticket", (req,res)=>{
     const name= req.params.ticket
-    const sqlDelete="DELETE FROM movie_reviews WHERE ticket = ?";
-    db.query(sqlDelete, name, (err,result)=>{
+    const sqlDelete='DELETE FROM ticket WHERE Numero_de_ticket ="'+name+'"';
+    db.query(sqlDelete, (err,result)=>{
        if (err) console.log(err);
+       res.send(result)
     })
 })
 
